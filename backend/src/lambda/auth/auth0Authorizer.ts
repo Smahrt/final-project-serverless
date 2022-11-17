@@ -73,10 +73,12 @@ async function verifyToken(authHeader: string): Promise<JwtPayload> {
     key.getPublicKey(), // Public key to validate the token against
     {
       algorithms: ['RS256'], // We need to specify that we use the RS256 algorithm
-      audience: 'https://api.c0der.io/v1/',
-      issuer: 'https://dev-k1n0gtqp.us.auth0.com/'
+      // audience: 'https://api.c0der.io/v1/',
+      // issuer: 'https://dev-k1n0gtqp.us.auth0.com/'
     }
   );
+
+  logger.info('Auth payload:', payload);
 
   return payload as JwtPayload;
 }
