@@ -90,7 +90,7 @@ export class TodosAccess {
     userId: string,
     attachmentUrl: string
   ): Promise<void> {
-    logger.info('Updating an attachment URL')
+    logger.info('Updating an attachment URL', { todoId, userId, attachmentUrl })
 
     await this.docClient.update({
       TableName: this.todosTable,

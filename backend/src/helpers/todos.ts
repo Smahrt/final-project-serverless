@@ -62,44 +62,14 @@ export const deleteTodo = async (
   );
 }
 
-export const generateUploadUrl = async (
+export const updateAttachmentUrl = async (
   todoId: string,
   userId: string
 ): Promise<string> => {
-  const attachmentUrl = await AttachmentUtils.getAttachmentUrl(todoId)
-  await docClient.update({
-    TableName: todosTable,
-    Key: {
-      todoId,
-      userId
-    },
-    UpdateExpression: 'set attachmentUrl = :attachmentUrl',
-    ExpressionAttributeValues: {
-      ':attachmentUrl': attachmentUrl
-    },
-    ReturnValues: 'UPDATED_NEW'
-  }).promise()
+  const todosAccess = new TodosAccess();
+  const attachmentUrl = await AttachmentUtils.generateUploadUrl(todoId)
 
-  return attachmentUrl
-}
-
-export const createAttachmentPresignedUrl = async (
-  todoId: string,
-  userId: string
-): Promise<string> => {
-  const attachmentUrl = await AttachmentUtils.getAttachmentUrl(todoId)
-  await docClient.update({
-    TableName: todosTable,
-    Key: {
-      todoId,
-      userId
-    },
-    UpdateExpression: 'set attachmentUrl = :attachmentUrl',
-    ExpressionAttributeValues: {
-      ':attachmentUrl': attachmentUrl
-    },
-    ReturnValues: 'UPDATED_NEW'
-  }).promise()
+  await todosAccess.updateAttachmentUrl(todoId, userId, attachmentUrl);
 
   return attachmentUrl
 }
