@@ -3,6 +3,8 @@ org: kubiat
 app: serverless-kubiat-app
 service: serverless-kubiat-app
 
+frameworkVersion: "^3.24.1"
+
 plugins:
   - serverless-webpack
   - serverless-iam-roles-per-function
