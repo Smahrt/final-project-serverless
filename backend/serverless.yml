@@ -8,6 +8,12 @@ plugins:
   - serverless-iam-roles-per-function
   - serverless-plugin-tracing
 
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true # Node modules configuration for packaging
+    packager: "yarn" # Packager that will be used to package your external modules
+
 provider:
   name: aws
   runtime: nodejs14.x
