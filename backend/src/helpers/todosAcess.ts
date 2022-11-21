@@ -1,8 +1,9 @@
-import { DocumentClient } from 'aws-sdk/clients/dynamodb'
+import type { DocumentClient } from 'aws-sdk/clients/dynamodb'
 import { createLogger } from '../utils/logger'
 import { TodoItem } from '../models/TodoItem'
 import { TodoUpdate } from '../models/TodoUpdate';
 import { getDocumentClient } from '@shelf/aws-ddb-with-xray';
+import { AttachmentUtils } from './attachmentUtils';
 
 const logger = createLogger('TodosAccess')
 
@@ -29,7 +30,13 @@ export class TodosAccess {
       }
     }).promise()
 
-    const items = result.Items
+    let items = result.Items as TodoItem[]
+
+    // add attachmentUrl to the item
+    for (const item of items) {
+      item.attachmentUrl = AttachmentUtils.getAttachmentUrl(item.todoId)
+    }
+
     return items as TodoItem[]
   }
 

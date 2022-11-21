@@ -11,7 +11,8 @@ import {
   Icon,
   Input,
   Image,
-  Loader
+  Loader,
+  Label
 } from 'semantic-ui-react'
 
 import { createTodo, deleteTodo, getTodos, patchTodo } from '../api/todos-api'
@@ -27,17 +28,30 @@ interface TodosState {
   todos: Todo[]
   newTodoName: string
   loadingTodos: boolean
+  error: string
 }
 
 export class Todos extends React.PureComponent<TodosProps, TodosState> {
   state: TodosState = {
     todos: [],
     newTodoName: '',
-    loadingTodos: true
+    loadingTodos: true,
+    error: ''
   }
 
   handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ newTodoName: event.target.value })
+    this.setState({
+      newTodoName: event.target.value,
+      error: this.onValidateTodoName(event.target.value)
+    })
+  }
+
+  onValidateTodoName = (value: string = '') => {
+    return value.length > 50
+      ? 'Todo name cannot be longer than 50 characters'
+      : value.length < 3
+        ? 'Todo name cannot be empty'
+        : ''
   }
 
   onEditButtonClick = (todoId: string) => {
@@ -123,13 +137,22 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
               labelPosition: 'left',
               icon: 'add',
               content: 'New task',
+              disabled: this.state.newTodoName.length === 0 || this.state.error.length > 0,
               onClick: this.onTodoCreate
             }}
+            disabled={this.state.loadingTodos}
             fluid
             actionPosition="left"
             placeholder="To change the world..."
             onChange={this.handleNameChange}
           />
+        </Grid.Column>
+        <Grid.Column width={16}>
+          {this.state.error && (
+            <Label basic color="red" pointing>
+              {this.state.error}
+            </Label>
+          )}
         </Grid.Column>
         <Grid.Column width={16}>
           <Divider />
